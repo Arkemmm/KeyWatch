@@ -8,5 +8,4 @@ en aucun cas l'utilisation de ce logiciel à des fins malveillantes ou sans le c
 
 ### Note des prochaines mises à jour :  
 
-`1. Retour à la ligne quand la touche [ENTER] est frappé.`  
-`2. Mettre une durée en secondes entre chaque touches frappés.`  
+
