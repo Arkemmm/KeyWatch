@@ -72,7 +72,7 @@ def write_keys(keys_pressed, last_time):
             # Calcul de la différence de temps entre l'heure actuelle et l'heure de la dernière pression, cela créer un intervalle de temps.
             current_time = datetime.datetime.now()
             time_diff = (current_time - last_time).total_seconds()
-            if time_diff >= 0.5:
+            if time_diff >= 1:
                 if time_diff < 2:
                     f.write(f"[{int(time_diff * 1000)} ms] {''.join(keys_pressed)}")
                 else:
