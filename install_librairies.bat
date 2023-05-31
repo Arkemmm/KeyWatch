@@ -4,7 +4,7 @@ REM Mettre à jour pip
 py -m pip install --upgrade pip
 
 REM Installation des bibliotheques...
-py -m pip install pyinstaller
+py -m pip install pywin32
 py -m pip install keyboard
 
 REM Verification...
