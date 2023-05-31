@@ -18,6 +18,7 @@ import win32con
 
 KEY_MAP = {
     " ": "[SPACE]",
+    "space": "[SPACE]";
     "enter": "[ENTER]",
     "esc": "[ESC]",
     "ctrl": "[CTRL]",
@@ -28,6 +29,7 @@ KEY_MAP = {
     "maj": "[SHIFT]",
     "backspace": "[BACKSPACE]",
     "caps lock": "[CAPS LOCK]",
+    "verr.maj": "[CAPS LOCK]",
     "up": "[UP]",
     "haut": "[UP]",
     "down": "[DOWN]",
