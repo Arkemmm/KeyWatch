@@ -1,5 +1,4 @@
 @echo off
-setlocal EnableDelayedExpansion
 
 REM Define colors and styles
 set "color_normal=0f"
@@ -10,21 +9,30 @@ set "style_separator=----------------------------------------"
 REM Clear the screen
 cls
 
+REM Turn off command echoing
+echo off
+
 REM Update pip
 echo Updating pip...
 py -m pip install --upgrade pip > nul 2>&1
+if %errorlevel% neq 0 (
+    echo.
+    echo %style_separator%
+    echo An error occurred during pip update.
+    echo %style_separator%
+    color %color_error%
+    goto :exit
+)
 
 REM Install libraries
 echo Installing libraries...
-py -m pip install pywin32 > nul 2>&1
-py -m pip install keyboard > nul 2>&1
-py -m pip install discord_webhook > nul 2>&1
+py -m pip install pywin32 keyboard discord_webhook > nul 2>&1
 
 REM Check installation status
 if %errorlevel% neq 0 (
     echo.
     echo %style_separator%
-    echo An error occurred during installation.
+    echo An error occurred during library installation.
     echo %style_separator%
     color %color_error%
 ) else (
@@ -35,6 +43,7 @@ if %errorlevel% neq 0 (
     color %color_success%
 )
 
+:exit
 REM Display completion message
 echo.
 echo Press any key to exit...
@@ -43,4 +52,3 @@ pause > nul
 REM Reset color and exit
 color %color_normal%
 exit
-
