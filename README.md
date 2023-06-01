@@ -7,6 +7,6 @@ en aucun cas l'utilisation de ce logiciel à des fins malveillantes ou sans le c
 ---
 
 ### Note des prochaines mises à jour :  
-➮ send the log file via discord webhooks
-➮ Hide the program while running
+➮ send the log file via discord webhooks  
+➮ Hide the program while running  
 
