@@ -18,7 +18,7 @@ import win32con
 
 KEY_MAP = {
     " ": "[SPACE]",
-    "space": "[SPACE]";
+    "space": "[SPACE]",
     "enter": "[ENTER]",
     "esc": "[ESC]",
     "ctrl": "[CTRL]",
