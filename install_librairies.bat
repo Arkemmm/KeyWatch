@@ -4,14 +4,10 @@ REM Define colors and styles
 set "color_normal=0f"
 set "color_error=0c"
 set "color_success=0a"
-set "style_separator=----------------------------------------"
 
-REM Clear the screen
 cls
 
-REM Turn off command echoing
-echo off
-
+REM Display ASCII art logo
 echo  ,ggg,        gg                                                                               
 echo dP""Y8b       dP                                                     I8              ,dPYb,    
 echo Yb, `88      d8'                                                     I8              IP'`Yb    
@@ -29,7 +25,6 @@ echo                              I8   8I
 echo                              `8, ,8I                                                           
 echo                               `Y8P"                                                            
 
-
 REM Update pip
 echo Updating pip...
 py -m pip install --upgrade pip > nul 2>&1
@@ -37,7 +32,6 @@ if %errorlevel% neq 0 (
     echo.
     echo %style_separator%
     echo An error occurred during pip update.
-    echo %style_separator%
     color %color_error%
     goto :exit
 )
@@ -49,15 +43,11 @@ py -m pip install pywin32 keyboard > nul 2>&1
 REM Check installation status
 if %errorlevel% neq 0 (
     echo.
-    echo %style_separator%
     echo An error occurred during library installation.
-    echo %style_separator%
     color %color_error%
 ) else (
     echo.
-    echo %style_separator%
     echo Libraries installed successfully!
-    echo %style_separator%
     color %color_success%
 )
 
