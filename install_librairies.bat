@@ -12,6 +12,12 @@ cls
 REM Turn off command echoing
 echo off
 
+echo ██╗░░██╗███████╗██╗░░░██╗░██╗░░░░░░░██╗░█████╗░████████╗░█████╗░██╗░░██╗
+echo ██║░██╔╝██╔════╝╚██╗░██╔╝░██║░░██╗░░██║██╔══██╗╚══██╔══╝██╔══██╗██║░░██║
+echo ██╔═██╗░██╔══╝░░░░╚██╔╝░░░░████╔═████║░██╔══██║░░░██║░░░██║░░██╗██╔══██║
+echo ██║░╚██╗███████╗░░░██║░░░░░╚██╔╝░╚██╔╝░██║░░██║░░░██║░░░╚█████╔╝██║░░██║
+echo ╚═╝░░╚═╝╚══════╝░░░╚═╝░░░░░░╚═╝░░░╚═╝░░╚═╝░░╚═╝░░░╚═╝░░░░╚════╝░╚═╝░░╚═╝
+
 REM Update pip
 echo Updating pip...
 py -m pip install --upgrade pip > nul 2>&1
@@ -26,7 +32,7 @@ if %errorlevel% neq 0 (
 
 REM Install libraries
 echo Installing libraries...
-py -m pip install pywin32 keyboard discord_webhook > nul 2>&1
+py -m pip install pywin32 keyboard > nul 2>&1
 
 REM Check installation status
 if %errorlevel% neq 0 (
