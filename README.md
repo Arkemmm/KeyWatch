@@ -73,3 +73,16 @@ There is no additional configuration required for KeyWatch. However, you can mod
 ## Contributing
 
 Contributions to KeyWatch are welcome! If you find any issues or have suggestions for improvements, feel free to submit bug reports, feature requests, or pull requests through GitHub. You can get in touch with the development team by contacting @Arkemmm.
+
+## Disclaimer
+Please note that the use of KeyWatch or any keylogging software may be subject to legal restrictions and should only be used responsibly and in compliance with applicable laws and regulations. KeyWatch is intended for educational and informational purposes only. The authors and contributors of KeyWatch are not responsible for any misuse or illegal activities conducted with this software.
+
+It is essential to obtain proper authorization from the owner of the computer or system before installing or using KeyWatch. Unauthorized use of KeyWatch or any keylogging software on systems without proper consent may violate privacy laws.
+
+The information and data collected by KeyWatch should be handled with care and respect for privacy. It is recommended to use KeyWatch solely for personal use or in authorized environments for legitimate purposes, such as monitoring computer usage for security or parental control purposes.
+
+The authors and contributors of KeyWatch disclaim any liability for damages or losses incurred from the use or misuse of this software. Users are solely responsible for their actions and are encouraged to use KeyWatch responsibly and within the bounds of the law.
+
+Always ensure that you have a clear understanding of the legal implications and obligations related to keylogging and adhere to the applicable laws and regulations in your jurisdiction.
+
+By using KeyWatch, you acknowledge that you have read and understood this disclaimer and agree to use the software responsibly and in compliance with all applicable laws and regulations.
