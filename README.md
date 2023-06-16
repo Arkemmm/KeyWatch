@@ -5,7 +5,7 @@ KeyWatch is a keylogger written in Python.
 ## To do
 
 ➜ Run as a service in background  
-➜  
+➜ Screenshot when ˋ@ˋ is typed
 ➜  
 
 ## Table of Contents
