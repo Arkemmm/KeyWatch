@@ -2,6 +2,12 @@
 
 KeyWatch is a keylogger written in Python.
 
+## To do
+
+➜ Run as a service in background  
+➜  
+➜  
+
 ## Table of Contents
 
 - [KeyWatch](#keywatch)
